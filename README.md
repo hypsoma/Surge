@@ -18,6 +18,19 @@ DOMAIN-SET,https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksur
 下表由同步脚本自动生成。
 
 <!-- sources:start -->
+| 文件 | 规则数 | 源头 | 许可证 | 说明 |
+| --- | ---: | --- | --- | --- |
+| [adblocksurge.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksurge.list) | 240005 | [217heidai/adblockfilters](https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list) | GPL-3.0 | DOMAIN-SET 去广告 |
+| [CN_ASN.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/CN_ASN.list) | 5231 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_ASN.list) | GPL-3.0 |  |
+| [CN_IP.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/CN_IP.list) | 56596 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_IP.list) | GPL-3.0 | 已从纯 CIDR 转换 |
+| [Tencent_ASN.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Tencent_ASN.list) | 6 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Tencent/Tencent_ASN.list) | GPL-3.0 |  |
+| [anthropic.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/anthropic.list) | 53 | [VPSDance/ai-proxy-rules](https://raw.githubusercontent.com/VPSDance/ai-proxy-rules/main/rules/surge/anthropic.list) | MIT |  |
+| [OpenAI.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/OpenAI.list) | 35 | [blackmatrix7/ios_rule_script](https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OpenAI/OpenAI.list) | GPL-2.0 |  |
+| [Gemini.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Gemini.list) | 13 | [blackmatrix7/ios_rule_script](https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Gemini/Gemini.list) | GPL-2.0 |  |
+| [Binance.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Binance.list) | 12 | [blackmatrix7/ios_rule_script](https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Binance/Binance.list) | GPL-2.0 |  |
+| [Google_ASN.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Google_ASN.list) | 45 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Google/Google_ASN.list) | GPL-3.0 |  |
+| [Google_IP.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Google_IP.list) | 9074 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Google/Google_IP.list) | GPL-3.0 | 已从纯 CIDR 转换 |
+| [Twitter_ASN.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Twitter_ASN.list) | 4 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Twitter/Twitter_ASN.list) | GPL-3.0 |  |
 <!-- sources:end -->
 
 ## 同步机制
