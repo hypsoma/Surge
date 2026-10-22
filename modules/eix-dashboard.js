@@ -11,6 +11,9 @@
  */
 
 const STORE_KEY = 'eix_dashboard_token';
+// 抓取脚本每次运行都记一笔, 面板没有 token 时用来判断问题出在哪
+const SEEN_KEY = 'eix_dashboard_seen';
+const PLACEHOLDER_TOKEN = '留空则自动抓取';
 const DEFAULT_HOST = 'ap.cdn.e-ix.com';
 const DEFAULT_ICON = 'airplane.circle.fill';
 const DEFAULT_COLOR = '#355CC2';
@@ -42,6 +45,7 @@ function captureToken() {
       break;
     }
   }
+  $persistentStore.write(JSON.stringify({ time: Date.now(), auth: !!token }), SEEN_KEY);
   if (token && token !== $persistentStore.read(STORE_KEY)) {
     $persistentStore.write(token, STORE_KEY);
     $notification.post('E-IX 面板', '已获取登录 token', '打开 Surge 的面板就能看到最新数据');
@@ -52,19 +56,22 @@ function captureToken() {
 // ---------- 面板 ----------
 
 async function runPanel() {
+  // 模块参数没被替换时, argument 里会留着 {{{NAME}}} 原样
+  if (Object.keys(args).some((k) => String(args[k]).indexOf('{{{') >= 0)) {
+    return $done(errorPanel('模块参数没有生效\n当前的 Surge 版本可能不支持模块参数, 请升级 Surge'));
+  }
+
   const host = (args.host || DEFAULT_HOST).replace(/^https?:\/\//, '').replace(/\/+$/, '');
   const base = `https://${host}/api/v1/access`;
 
-  const manual = cleanToken(args.token);
+  let manual = cleanToken(args.token);
+  const manualInvalid = !!manual && !looksLikeToken(manual);
+  if (manualInvalid) manual = '';
   const captured = cleanToken($persistentStore.read(STORE_KEY));
   const tokens = [manual, captured].filter((t, i, a) => t && a.indexOf(t) === i);
 
   if (!tokens.length) {
-    return $done(
-      noticePanel(
-        '还没有登录 token\n用浏览器打开 E-IX 网页并登录一次\n或者在模块参数 TOKEN 里手动填写',
-      ),
-    );
+    return $done(noticePanel(noTokenMessage(host, manualInvalid)));
   }
 
   // 手动填的 token 优先; 它失效时再试自动抓到的
@@ -231,12 +238,40 @@ function parseArgs(raw) {
   return out;
 }
 
-// 去掉空白和引号; 模块参数里的中文占位文字当作没填
+// 去掉空白和各种引号; 模块参数里的中文占位文字当作没填
 function cleanToken(value) {
   if (!value) return '';
-  const t = String(value).trim().replace(/^["']|["']$/g, '').trim();
-  if (!t || t === '#' || /[^\x21-\x7e ]/.test(t)) return '';
+  const t = String(value)
+    .trim()
+    .replace(/^["'“”‘’「」]+|["'“”‘’「」]+$/g, '')
+    .trim();
+  if (!t || t === '#' || t === PLACEHOLDER_TOKEN || /[一-鿿]/.test(t)) return '';
   return t;
+}
+
+function looksLikeToken(t) {
+  return /^[\x21-\x7e ]+$/.test(t);
+}
+
+// 没有 token 时, 根据抓取脚本的记录说明卡在哪一步
+function noTokenMessage(host, manualInvalid) {
+  const lines = ['还没有登录 token'];
+  if (manualInvalid) {
+    lines.push('模块参数 TOKEN 里的内容不像 token, 检查是否多了空格或中文引号');
+  }
+  let seen = null;
+  try {
+    seen = JSON.parse($persistentStore.read(SEEN_KEY) || 'null');
+  } catch (_) {}
+  if (!seen || !seen.time) {
+    lines.push(`抓取脚本还没运行过, 说明 Surge 没有解密 ${host} 的请求`);
+    lines.push('检查 Surge 的 MitM 和脚本开关, 以及 MITM 主机名里有没有这个域名');
+  } else if (!seen.auth) {
+    lines.push(`抓取脚本 ${fmtDateTime(seen.time)} 运行过, 但请求里没有 token`);
+    lines.push(`先在浏览器里打开 ${host} 并登录`);
+  }
+  lines.push('也可以在模块参数 TOKEN 里手动填写');
+  return lines.join('\n');
 }
 
 function fmtBytes(n) {
@@ -261,4 +296,9 @@ function fmtDate(sec) {
 
 function fmtTime(d) {
   return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function fmtDateTime(ms) {
+  const d = new Date(ms);
+  return `${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${fmtTime(d)}`;
 }
