@@ -1,0 +1,4 @@
+.sync-report.json
+.sync-commit-msg
+__pycache__/
+.DS_Store

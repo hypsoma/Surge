@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list",
+    "path": "rules/adblocksurge.list",
+    "license": "GPL-3.0",
+    "note": "DOMAIN-SET 去广告"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_ASN.list",
+    "path": "rules/CN_ASN.list",
+    "license": "GPL-3.0"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_IP.list",
+    "path": "rules/CN_IP.list",
+    "convert": "cidr",
+    "license": "GPL-3.0",
+    "note": "已从纯 CIDR 转换"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Tencent/Tencent_ASN.list",
+    "path": "rules/Tencent_ASN.list",
+    "license": "GPL-3.0"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/VPSDance/ai-proxy-rules/main/rules/surge/anthropic.list",
+    "path": "rules/anthropic.list",
+    "license": "MIT"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OpenAI/OpenAI.list",
+    "path": "rules/OpenAI.list",
+    "license": "GPL-2.0"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Gemini/Gemini.list",
+    "path": "rules/Gemini.list",
+    "license": "GPL-2.0"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Binance/Binance.list",
+    "path": "rules/Binance.list",
+    "license": "GPL-2.0"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Google/Google_ASN.list",
+    "path": "rules/Google_ASN.list",
+    "license": "GPL-3.0"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Google/Google_IP.list",
+    "path": "rules/Google_IP.list",
+    "convert": "cidr",
+    "license": "GPL-3.0",
+    "note": "已从纯 CIDR 转换"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Twitter/Twitter_ASN.list",
+    "path": "rules/Twitter_ASN.list",
+    "license": "GPL-3.0"
+  }
+]
