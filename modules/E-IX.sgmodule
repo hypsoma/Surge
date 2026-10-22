@@ -1,0 +1,16 @@
+#!name=E-IX 面板
+#!desc=在 Surge 面板里显示 E-IX 的套餐、流量、重置日、到期时间、在线设备和余额。用浏览器打开一次 E-IX 网页就会自动获取登录 token, 也可以在参数里手动填写。
+#!category=面板
+#!homepage=https://github.com/hypsoma/Surge
+#!arguments=PANEL_NAME:E-IX面板,UPDATE_INTERVAL:600,ICON:airplane.circle.fill,ICON_COLOR:#355CC2,POLICY:按规则,TIMEOUT:10,HOST:ap.cdn.e-ix.com,TOKEN:留空则自动抓取
+#!arguments-desc=· [PANEL_NAME]: 面板名称, 填 # 可以关掉面板\n\n· [UPDATE_INTERVAL]: 面板刷新间隔, 单位是秒. 打开面板时距上次刷新超过这个时间才会重新请求\n\n· [ICON]: 面板图标, 填 SF Symbols 名称\n\n· [ICON_COLOR]: 图标颜色. 流量用到 80% 或 7 天内到期会变橙色, 用到 90% 或已过期会变红色\n\n· [POLICY]: 请求 E-IX 接口走的策略或策略组名称, 填 按规则 就按规则分流\n\n· [TIMEOUT]: 接口请求超时, 单位是秒\n\n· [HOST]: E-IX 网页的域名. 换域名时改这里, MITM 和抓取规则会一起改\n\n· [TOKEN]: 手动填写登录 token. 留空则用浏览器打开 E-IX 网页时自动抓取. 手动获取方法: 在 E-IX 网页按 Option+Command+I 打开开发者工具, 在控制台输入 localStorage.getItem("pu:auth"), 复制结果, 不要带引号\n\n自动抓取需要浏览器信任 Surge 的 MITM 证书, 并且访问 E-IX 网页的流量经过 Surge
+
+[Script]
+E-IX抓取token = type=http-request,pattern=^https:\/\/{{{HOST}}}\/api\/v1\/access\/,script-path=https://raw.githubusercontent.com/hypsoma/Surge/main/modules/eix-dashboard.js,timeout=10
+E-IX面板脚本 = type=generic,script-path=https://raw.githubusercontent.com/hypsoma/Surge/main/modules/eix-dashboard.js,timeout=30,argument="host={{{HOST}}}&icon={{{ICON}}}&color={{{ICON_COLOR}}}&policy={{{POLICY}}}&timeout={{{TIMEOUT}}}&token={{{TOKEN}}}"
+
+[Panel]
+{{{PANEL_NAME}}} = script-name=E-IX面板脚本,update-interval={{{UPDATE_INTERVAL}}}
+
+[MITM]
+hostname = %APPEND% {{{HOST}}}

@@ -1,6 +1,6 @@
 # Surge
 
-Surge 配置里引用的外部规则镜像。GitHub Actions 每天从源头拉取一次，有变化就自动提交，所以这里的文件会跟着源头更新。
+Surge 配置里引用的外部规则镜像，以及自己写的模块。GitHub Actions 每天从源头拉取一次，有变化就自动提交，所以这里的文件会跟着源头更新。
 
 ## 使用
 
@@ -12,6 +12,14 @@ DOMAIN-SET,https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksur
 ```
 
 `CN_IP.list` 和 `Google_IP.list` 在源头是纯 CIDR 列表，这里已经转换成 `IP-CIDR` / `IP-CIDR6` 规则，可以直接当 `RULE-SET` 用，不需要再经过 Script-Hub。
+
+## 模块
+
+| 模块 | 订阅地址 | 说明 |
+| --- | --- | --- |
+| E-IX 面板 | `https://raw.githubusercontent.com/hypsoma/Surge/main/modules/E-IX.sgmodule` | 在 Surge 面板里显示 E-IX 的套餐、流量、重置日、到期时间、在线设备和余额 |
+
+在 Surge 的模块设置里选择从 URL 安装，填入订阅地址即可。E-IX 面板需要 MITM：用浏览器打开一次 E-IX 网页就会自动获取登录 token，也可以在模块参数 `TOKEN` 里手动填写，详见模块参数说明。
 
 ## 规则列表
 
