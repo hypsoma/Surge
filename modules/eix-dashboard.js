@@ -5,8 +5,13 @@
  * 1. http-request 脚本: 浏览器打开 E-IX 网页时, 从请求头里抓 authorization, 存进 $persistentStore
  * 2. generic 面板脚本: 用 token 请求 getSubscribe 和 info 两个接口, 生成面板内容
  *
+ * 抓取脚本的 argument 格式:
+ *   hosts=ap.cdn.e-ix.com,e-ix.cloud
+ *   只有发往这些域名的请求才会被抓取; 没有这个参数时不做过滤
+ *
  * 面板脚本的 argument 格式:
- *   host=ap.cdn.e-ix.com&icon=airplane.circle.fill&color=#355CC2&policy=按规则&timeout=10&token=xxx
+ *   host=ap.cdn.e-ix.com&extra=e-ix.cloud&icon=airplane.circle.fill&color=#355CC2&policy=按规则&timeout=10&token=xxx
+ * 面板只用 host 请求数据, extra 只用来在提示里列出抓取的域名
  * token 必须放在最后, 因为 token 里可能带有 = 号
  */
 
@@ -37,6 +42,12 @@ if (typeof $request !== 'undefined') {
 // ---------- 抓 token ----------
 
 function captureToken() {
+  const match = /^https?:\/\/([^\/:?#]+)/i.exec(String($request.url || ''));
+  const requestHost = match ? match[1].toLowerCase() : '';
+  if (args.hosts !== undefined && hostList(args.hosts).indexOf(requestHost) < 0) {
+    return $done({});
+  }
+
   const headers = $request.headers || {};
   let token = '';
   for (const k of Object.keys(headers)) {
@@ -45,7 +56,10 @@ function captureToken() {
       break;
     }
   }
-  $persistentStore.write(JSON.stringify({ time: Date.now(), auth: !!token }), SEEN_KEY);
+  $persistentStore.write(
+    JSON.stringify({ time: Date.now(), auth: !!token, host: requestHost }),
+    SEEN_KEY,
+  );
   if (token && token !== $persistentStore.read(STORE_KEY)) {
     $persistentStore.write(token, STORE_KEY);
     $notification.post('E-IX 面板', '已获取登录 token', '打开 Surge 的面板就能看到最新数据');
@@ -71,7 +85,8 @@ async function runPanel() {
   const tokens = [manual, captured].filter((t, i, a) => t && a.indexOf(t) === i);
 
   if (!tokens.length) {
-    return $done(noticePanel(noTokenMessage(host, manualInvalid)));
+    const captureHosts = hostList(`${host},${args.extra || ''}`);
+    return $done(noticePanel(noTokenMessage(captureHosts, manualInvalid)));
   }
 
   // 手动填的 token 优先; 它失效时再试自动抓到的
@@ -253,8 +268,17 @@ function looksLikeToken(t) {
   return /^[\x21-\x7e ]+$/.test(t);
 }
 
+// 逗号或空白分隔的域名列表, 去掉空项和占位符
+function hostList(value) {
+  return String(value || '')
+    .split(/[,\s]+/)
+    .map((h) => h.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/+$/, ''))
+    .filter((h, i, a) => h && h !== '#' && h.indexOf('{{{') < 0 && a.indexOf(h) === i);
+}
+
 // 没有 token 时, 根据抓取脚本的记录说明卡在哪一步
-function noTokenMessage(host, manualInvalid) {
+function noTokenMessage(hosts, manualInvalid) {
+  const host = hosts.join(' 或 ');
   const lines = ['还没有登录 token'];
   if (manualInvalid) {
     lines.push('模块参数 TOKEN 里的内容不像 token, 检查是否多了空格或中文引号');
@@ -265,9 +289,12 @@ function noTokenMessage(host, manualInvalid) {
   } catch (_) {}
   if (!seen || !seen.time) {
     lines.push(`抓取脚本还没运行过, 说明 Surge 没有解密 ${host} 的请求`);
-    lines.push('检查 Surge 的 MitM 和脚本开关, 以及 MITM 主机名里有没有这个域名');
+    lines.push(
+      `检查 Surge 的 MitM 和脚本开关, 以及 MITM 主机名里有没有${hosts.length > 1 ? '这些' : '这个'}域名`,
+    );
   } else if (!seen.auth) {
-    lines.push(`抓取脚本 ${fmtDateTime(seen.time)} 运行过, 但请求里没有 token`);
+    const where = seen.host ? ` 在 ${seen.host} 上` : '';
+    lines.push(`抓取脚本 ${fmtDateTime(seen.time)}${where}运行过, 但请求里没有 token`);
     lines.push(`先在浏览器里打开 ${host} 并登录`);
   }
   lines.push('也可以在模块参数 TOKEN 里手动填写');

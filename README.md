@@ -19,7 +19,7 @@ DOMAIN-SET,https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksur
 | --- | --- | --- |
 | E-IX 面板 | `https://raw.githubusercontent.com/hypsoma/Surge/main/modules/E-IX.sgmodule` | 在 Surge 面板里显示 E-IX 的套餐、流量、重置日、到期时间、在线设备和余额 |
 
-在 Surge 的模块设置里选择从 URL 安装，填入订阅地址即可。E-IX 面板需要 MITM：用浏览器打开一次 E-IX 网页就会自动获取登录 token，也可以在模块参数 `TOKEN` 里手动填写，详见模块参数说明。
+在 Surge 的模块设置里选择从 URL 安装，填入订阅地址即可。E-IX 面板需要 MITM：用浏览器打开一次 E-IX 网页，ap.cdn.e-ix.com 或 e-ix.cloud 都可以，就会自动获取登录 token，也可以在模块参数 `TOKEN` 里手动填写，详见模块参数说明。
 
 ## 规则列表
 
