@@ -1,9 +1,9 @@
 #!name=E-IX 面板
-#!desc=在 Surge 面板里显示 E-IX 的套餐、流量、重置日、到期时间、在线设备和余额。用浏览器打开一次 E-IX 网页 (ap.cdn.e-ix.com 或 e-ix.cloud) 就会自动获取登录 token, 也可以在参数里手动填写。
+#!desc=在 Surge 面板里显示 E-IX 的套餐、流量、重置日、到期时间、在线设备和余额。用浏览器打开一次 E-IX 网页 (cloud.e-ix.com 或 e-ix.cloud) 就会自动获取登录 token, 也可以在参数里手动填写。旧域名 ap.cdn.e-ix.com 已跳转到 cloud.e-ix.com。
 #!category=面板
 #!homepage=https://github.com/hypsoma/Surge
-#!arguments=PANEL_NAME:E-IX面板,UPDATE_INTERVAL:600,ICON:airplane.circle.fill,ICON_COLOR:#355CC2,POLICY:按规则,TIMEOUT:10,HOST:ap.cdn.e-ix.com,EXTRA_HOSTS:e-ix.cloud,TOKEN:留空则自动抓取
-#!arguments-desc=· [PANEL_NAME]: 面板名称, 填 # 可以关掉面板\n\n· [UPDATE_INTERVAL]: 面板刷新间隔, 单位是秒. 打开面板时距上次刷新超过这个时间才会重新请求\n\n· [ICON]: 面板图标, 填 SF Symbols 名称\n\n· [ICON_COLOR]: 图标颜色. 流量用到 80% 或 7 天内到期会变橙色, 用到 90% 或已过期会变红色\n\n· [POLICY]: 请求 E-IX 接口走的策略或策略组名称, 填 按规则 就按规则分流\n\n· [TIMEOUT]: 接口请求超时, 单位是秒\n\n· [HOST]: 面板请求数据用的域名, 也会从这个域名抓 token. 换域名时改这里\n\n· [EXTRA_HOSTS]: 另外还要抓 token 的域名, 只用来抓 token, 不用来请求数据. 默认是 e-ix.cloud. 多个域名用英文逗号分隔, 例如 e-ix.cloud,example.com. 填 # 表示不抓其他域名\n\n· [TOKEN]: 手动填写登录 token. 留空则用浏览器打开 E-IX 网页时自动抓取. 手动获取方法: 在 E-IX 网页按 Option+Command+I 打开开发者工具, 在控制台输入 localStorage.getItem("pu:auth"), 复制结果, 不要带引号\n\n自动抓取需要浏览器信任 Surge 的 MITM 证书, 并且访问 E-IX 网页的流量经过 Surge
+#!arguments=PANEL_NAME:E-IX面板,UPDATE_INTERVAL:600,ICON:airplane.circle.fill,ICON_COLOR:#355CC2,POLICY:按规则,TIMEOUT:10,HOST:cloud.e-ix.com,EXTRA_HOSTS:e-ix.cloud,TOKEN:留空则自动抓取
+#!arguments-desc=· [PANEL_NAME]: 面板名称, 填 # 可以关掉面板\n\n· [UPDATE_INTERVAL]: 面板刷新间隔, 单位是秒. 打开面板时距上次刷新超过这个时间才会重新请求\n\n· [ICON]: 面板图标, 填 SF Symbols 名称\n\n· [ICON_COLOR]: 图标颜色. 流量用到 80% 或 7 天内到期会变橙色, 用到 90% 或已过期会变红色\n\n· [POLICY]: 请求 E-IX 接口走的策略或策略组名称, 填 按规则 就按规则分流\n\n· [TIMEOUT]: 接口请求超时, 单位是秒\n\n· [HOST]: 面板请求数据用的域名, 也会从这个域名抓 token. 目前是 cloud.e-ix.com (2026-10 起, 旧的 ap.cdn.e-ix.com 会跳转过来). E-IX 再换域名时改这里, 面板会提示新域名\n\n· [EXTRA_HOSTS]: 另外还要抓 token 的域名, 只用来抓 token, 不用来请求数据. 默认是 e-ix.cloud. 多个域名用英文逗号分隔, 例如 e-ix.cloud,example.com. 填 # 表示不抓其他域名\n\n· [TOKEN]: 手动填写登录 token. 留空则用浏览器打开 E-IX 网页时自动抓取. 手动获取方法: 在 E-IX 网页按 Option+Command+I 打开开发者工具, 在控制台输入 localStorage.getItem("pu:auth"), 复制结果, 不要带引号\n\n自动抓取需要浏览器信任 Surge 的 MITM 证书, 并且访问 E-IX 网页的流量经过 Surge
 
 [Script]
 E-IX抓取token = type=http-request,pattern=^https:\/\/[^\/]+\/api\/v1\/access\/,script-path=https://raw.githubusercontent.com/hypsoma/Surge/main/modules/eix-dashboard.js,timeout=10,argument="hosts={{{HOST}}},{{{EXTRA_HOSTS}}}"

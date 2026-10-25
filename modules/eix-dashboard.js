@@ -6,11 +6,11 @@
  * 2. generic 面板脚本: 用 token 请求 getSubscribe 和 info 两个接口, 生成面板内容
  *
  * 抓取脚本的 argument 格式:
- *   hosts=ap.cdn.e-ix.com,e-ix.cloud
+ *   hosts=cloud.e-ix.com,e-ix.cloud
  *   只有发往这些域名的请求才会被抓取; 没有这个参数时不做过滤
  *
  * 面板脚本的 argument 格式:
- *   host=ap.cdn.e-ix.com&extra=e-ix.cloud&icon=airplane.circle.fill&color=#355CC2&policy=按规则&timeout=10&token=xxx
+ *   host=cloud.e-ix.com&extra=e-ix.cloud&icon=airplane.circle.fill&color=#355CC2&policy=按规则&timeout=10&token=xxx
  * 面板只用 host 请求数据, extra 只用来在提示里列出抓取的域名
  * token 必须放在最后, 因为 token 里可能带有 = 号
  */
@@ -19,7 +19,8 @@ const STORE_KEY = 'eix_dashboard_token';
 // 抓取脚本每次运行都记一笔, 面板没有 token 时用来判断问题出在哪
 const SEEN_KEY = 'eix_dashboard_seen';
 const PLACEHOLDER_TOKEN = '留空则自动抓取';
-const DEFAULT_HOST = 'ap.cdn.e-ix.com';
+// 2026-10 起 E-IX 的网页和接口都在 cloud.e-ix.com, 旧的 ap.cdn.e-ix.com 会 302 跳转过来
+const DEFAULT_HOST = 'cloud.e-ix.com';
 const DEFAULT_ICON = 'airplane.circle.fill';
 const DEFAULT_COLOR = '#355CC2';
 const ERROR_ICON = 'exclamationmark.triangle.fill';
@@ -122,6 +123,8 @@ function api(base, path, token) {
       'User-Agent': UA,
     },
     timeout,
+    // 不跟随跳转: E-IX 换域名时能在面板里直接提示新域名
+    'auto-redirect': false,
   };
   if (policy && policy !== '按规则' && policy !== '#') options.policy = policy;
 
@@ -129,6 +132,18 @@ function api(base, path, token) {
     $httpClient.get(options, (error, response, data) => {
       if (error) return reject(makeError(String(error), 0, false));
       const status = (response && (response.status || response.statusCode)) || 0;
+      if ([301, 302, 307, 308].indexOf(status) >= 0) {
+        const newHost = redirectHost(response);
+        return reject(
+          makeError(
+            newHost
+              ? `E-IX 的域名已变成 ${newHost}, 请把模块参数 HOST 改成它`
+              : `HTTP ${status}, E-IX 的域名可能变了, 检查模块参数 HOST`,
+            status,
+            false,
+          ),
+        );
+      }
       let json = null;
       try {
         json = JSON.parse(data);
@@ -227,6 +242,18 @@ function errorPanel(content) {
     'icon-color': COLOR_DANGER,
     style: 'error',
   };
+}
+
+// 从 3xx 响应的 Location 头里取出新域名
+function redirectHost(response) {
+  const headers = (response && response.headers) || {};
+  for (const k of Object.keys(headers)) {
+    if (k.toLowerCase() === 'location') {
+      const m = /^https?:\/\/([^\/:?#]+)/i.exec(String(headers[k] || ''));
+      return m ? m[1].toLowerCase() : '';
+    }
+  }
+  return '';
 }
 
 function makeError(message, status, auth) {
