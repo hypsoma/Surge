@@ -28,7 +28,7 @@ DOMAIN-SET,https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksur
 <!-- sources:start -->
 | 文件 | 规则数 | 源头 | 许可证 | 说明 |
 | --- | ---: | --- | --- | --- |
-| [adblocksurge.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksurge.list) | 242203 | [217heidai/adblockfilters](https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list) | GPL-3.0 | DOMAIN-SET 去广告 |
+| [adblocksurge.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/adblocksurge.list) | 244523 | [217heidai/adblockfilters](https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksurge.list) | GPL-3.0 | DOMAIN-SET 去广告 |
 | [CN_ASN.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/CN_ASN.list) | 5231 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_ASN.list) | GPL-3.0 |  |
 | [CN_IP.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/CN_IP.list) | 56395 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_IP.list) | GPL-3.0 | 已从纯 CIDR 转换 |
 | [Tencent_ASN.list](https://raw.githubusercontent.com/hypsoma/Surge/main/rules/Tencent_ASN.list) | 6 | [Kwisma/ASN-List](https://raw.githubusercontent.com/Kwisma/ASN-List/main/data/Tencent/Tencent_ASN.list) | GPL-3.0 |  |
