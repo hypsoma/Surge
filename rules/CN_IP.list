@@ -1,8 +1,8 @@
 # Converted to Surge rule format by hypsoma/Surge
 # Source: https://raw.githubusercontent.com/Kwisma/ASN-List/main/country/CN/CN_IP.list
 # CN 的 ASN 信息
-# 最后更新： CST 2026-11-12 07:15:49
-# ASN: 5231
+# 最后更新： CST 2026-11-13 06:35:59
+# ASN: 5230
 # 由 Kwisma 制作，保留所有权利。
 
 IP-CIDR,8.25.82.0/24
@@ -55644,7 +55644,6 @@ IP-CIDR6,240c:cfd0::/28
 IP-CIDR6,240c:cfe0::/27
 IP-CIDR6,2a06:9801:2ba::/48
 IP-CIDR6,2a0b:4e07:230::/44
-IP-CIDR6,2a0f:1cc5:4300::/40
 IP-CIDR6,2602:f92a:1310::/48
 IP-CIDR6,2a0e:4005:ff10::/48
 IP-CIDR6,2a0e:4005:ff20::/48
